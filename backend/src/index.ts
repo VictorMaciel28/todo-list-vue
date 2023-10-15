@@ -8,7 +8,7 @@ const tasksModel = new TasksModel();
 
 app.use(express.json());
 
-const allowedOrigins = ['http://localhost:4200'];
+const allowedOrigins = ['http://localhost:8080'];
 const options: cors.CorsOptions = {
   origin: allowedOrigins
 };

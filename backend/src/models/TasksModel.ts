@@ -29,7 +29,7 @@ export class TasksModel {
     });
   }
 
-  remove(id: string) {    
+  remove(id: string) {
     return prisma.tasks.delete({
       where: {
         id,
@@ -49,11 +49,7 @@ export class TasksModel {
   }
 
   async findAll() {
-    return await prisma.tasks.findMany({
-      where: {
-        active: true,
-      },
-    });
+    return await prisma.tasks.findMany();
   }
 
   async findAllCompleted() {
