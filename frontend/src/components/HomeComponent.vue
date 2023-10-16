@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     async getTasks() {
-      return await taskService.getTasks();
+      this.tasks = await taskService.getTasks();
     },
     async changeStatus(task) {
       await taskService.changeStautus(task);
