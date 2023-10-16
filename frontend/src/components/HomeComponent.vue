@@ -79,16 +79,17 @@
     </ul>
   </div>
 </template>
-<script lang="ts">
+<script>
 import taskService from "../services/TaskService";
 import Task from "../interfaces/TaskInterface";
+import { TransitionHooks } from "vue";
 
 export default {
   data() {
     return {
-      editForm: {} as Task,
-      addForm: {} as Task,
-      tasks: [] as Task[],
+      editForm: {},
+      addForm: {},
+      tasks: [],
       isAddFormVisible: false,
       isEditFormVisible: false,
     };
@@ -98,17 +99,17 @@ export default {
   },
   methods: {
     async getTasks() {
-      this.tasks = await taskService.getTasks();
+      return await taskService.getTasks();
     },
-    async changeStatus(task: Task) {
+    async changeStatus(task) {
       await taskService.changeStautus(task);
       this.getTasks();
     },
-    async deleteTask(task: Task) {
+    async deleteTask(task) {
       await taskService.deleteTask(task);
       this.getTasks();
     },
-    showEditForm(task: Task) {
+    showEditForm(task) {
       this.isAddFormVisible = false;
       this.isEditFormVisible = false;
       this.editForm = { ...task };
@@ -118,13 +119,13 @@ export default {
     },
     async addTask() {
       await taskService.addTask(this.addForm);
-      this.addForm = {} as Task;
+      this.addForm = {};
       this.isAddFormVisible = false;
       this.getTasks();
     },
     async editTask() {
       await taskService.editTask(this.editForm);
-      this.editForm = {} as Task;
+      this.editForm = {};
       this.isEditFormVisible = false;
       this.getTasks();
     },
