@@ -33,4 +33,13 @@ export default {
       throw error;
     }
   },
+  async addTask(task: Task) {
+    task.active = true;
+    const response = await axios.post(`${BASE_URL}/tasks`, task);
+    return JSON.parse(JSON.stringify(response));
+  },
+  async editTask(task: Task) {
+    const response = await axios.put(`${BASE_URL}/tasks`, task);
+    return JSON.parse(JSON.stringify(response));
+  },
 };

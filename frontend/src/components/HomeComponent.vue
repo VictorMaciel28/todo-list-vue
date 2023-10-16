@@ -4,12 +4,14 @@
     <h3 class="title">Em progresso</h3>
     <ul>
       <li v-for="task in activeTasks" :key="task.id" class="list-item">
-        {{ task.name }}
+        {{ task.name }} - {{ task.description }}
         <div class="edit-buttons">
           <el-button v-on:click="changeStatus(task)" type="success"
             >Concluir</el-button
           >
-          <el-button type="warning">Editar</el-button>
+          <el-button v-on:click="showEditForm(task)" type="warning"
+            >Editar</el-button
+          >
           <el-button v-on:click="deleteTask(task)" type="danger"
             >Excluir</el-button
           >
@@ -19,33 +21,60 @@
     <h3 class="title">Concluídas</h3>
     <ul>
       <li v-for="task in inactiveTasks" :key="task.id" class="list-item">
-        {{ task.name }}
+        {{ task.name }} - {{ task.description }}
         <div class="edit-buttons">
           <el-button v-on:click="changeStatus(task)" type="success"
             >Retornar</el-button
           >
-          <el-button type="warning">Editar</el-button>
+          <el-button v-on:click="showEditForm(task)" type="warning"
+            >Editar</el-button
+          >
           <el-button v-on:click="deleteTask(task)" type="danger"
             >Excluir</el-button
           >
         </div>
       </li>
     </ul>
-    <el-button type="success">Inclur tarefa</el-button>
-
-    <ul>
+    <el-button
+      v-on:click="
+        isAddFormVisible = true;
+        isEditFormVisible = false;
+      "
+      type="success"
+      >Inclur tarefa</el-button
+    >
+    <ul v-if="isAddFormVisible">
       <h3 class="title">Nova Tarefa</h3>
-      <el-form :model="form" label-width="120px">
+      <el-form :model="addForm" label-width="120px">
         <el-form-item label="Tarefa">
-          <el-input v-model="form.name" />
+          <el-input v-model="addForm.name" />
         </el-form-item>
         <el-form-item label="Descrição">
-          <el-input v-model="form.name" />
+          <el-input v-model="addForm.description" />
         </el-form-item>
       </el-form>
       <li class="button-container">
-        <el-button type="success">Salvar</el-button>
-        <el-button type="danger">Calcelar</el-button>
+        <el-button v-on:click="addTask()" type="success">Salvar</el-button>
+        <el-button v-on:click="isAddFormVisible = false" type="danger"
+          >Calcelar</el-button
+        >
+      </li>
+    </ul>
+    <ul v-if="isEditFormVisible">
+      <h3 class="title">Editar Tarefa</h3>
+      <el-form :model="editForm" label-width="120px">
+        <el-form-item label="Tarefa">
+          <el-input v-model="editForm.name" />
+        </el-form-item>
+        <el-form-item label="Descrição">
+          <el-input v-model="editForm.description" />
+        </el-form-item>
+      </el-form>
+      <li class="button-container">
+        <el-button v-on:click="editTask()" type="success">Salvar</el-button>
+        <el-button v-on:click="isEditFormVisible = false" type="danger"
+          >Calcelar</el-button
+        >
       </li>
     </ul>
   </div>
@@ -57,8 +86,11 @@ import Task from "../interfaces/TaskInterface";
 export default {
   data() {
     return {
-      form: { name: "" },
+      editForm: {} as Task,
+      addForm: {} as Task,
       tasks: [] as Task[],
+      isAddFormVisible: false,
+      isEditFormVisible: false,
     };
   },
   mounted() {
@@ -74,6 +106,26 @@ export default {
     },
     async deleteTask(task: Task) {
       await taskService.deleteTask(task);
+      this.getTasks();
+    },
+    showEditForm(task: Task) {
+      this.isAddFormVisible = false;
+      this.isEditFormVisible = false;
+      this.editForm = { ...task };
+      setTimeout(() => {
+        this.isEditFormVisible = true;
+      }, 250);
+    },
+    async addTask() {
+      await taskService.addTask(this.addForm);
+      this.addForm = {} as Task;
+      this.isAddFormVisible = false;
+      this.getTasks();
+    },
+    async editTask() {
+      await taskService.editTask(this.editForm);
+      this.editForm = {} as Task;
+      this.isEditFormVisible = false;
       this.getTasks();
     },
   },
