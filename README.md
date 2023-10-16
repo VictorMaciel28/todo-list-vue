@@ -11,6 +11,13 @@ git clone https://github.com/VictorMaciel28/todo-list.git
 
 ```
 
+#### Aplicação rodando:
+
+```shell
+https://victormaciel28.github.io/todo-list-vue/
+
+```
+
 #### Banco de dados:
 
 ```shell
@@ -37,7 +44,7 @@ Baixar dependencias:
 $ yarn install
 
 Rodar Migratons:
-$ yarn prisma migrate dev --name init
+$ npx prisma db push --name
 
 Rodar Seeding
 $ yarn prisma db seed
